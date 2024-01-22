@@ -1,0 +1,28 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "Наполеон",
+      "rating": "16+",
+      "session_place": "MULTIPLEX",
+      "session_date": "2024-01-23",
+      "session_time": ["14:00", "16:45", "19:50", "22:45"]
+    },
+    {
+      "id": 2,
+      "title": "Переліт",
+      "rating": "0+",
+      "session_date": "2024-01-23",
+      "session_place": "Сінема Сіті",
+      "session_time": ["11:40", "14:10", "17:55", "20:30"]
+    },
+    {
+      "id": 3,
+      "title": "Аквамен 2",
+      "rating": "12+",
+      "session_date": "2024-01-23",
+      "session_place": "Планета Кіно",
+      "session_time": ["10:30", "16:20", "20:00"]
+    }
+  ]
+}
