@@ -1,14 +1,32 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": [],
+  "include": [
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*.json",
+    "src/**/*.mjs"
+  ],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "composite": true,
+    "allowJs": true,
     "noEmit": true,
     "strict": true,
+    "resolveJsonModule": true,
+    "declaration": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "assets/*": ["./src/assets/*"],
+      "components/*": ["./src/components/*"],
+      "router/*": ["./src/router/*"],
+      "services/*": ["./src/services/*"],
+      "stores/*": ["./src/stores/*"],
+      "views/*": ["./src/views/*"]
     }
-  }
+  },
+  "plugins": ["@typescript-eslint"]
 }

@@ -5,14 +5,17 @@
     "vitest.config.*",
     "cypress.config.*",
     "nightwatch.conf.*",
-    "playwright.config.*"
+    "playwright.config.*",
+    ".eslintrc.*",
+    "src/env.d.ts"
   ],
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
     "strict": true,
+    "declaration": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   }
 }
