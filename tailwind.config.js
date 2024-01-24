@@ -10,7 +10,7 @@ export default {
         selectedSeats: '#f2a729',
         backgroundBase: '#f4f4f4',
         textPrimary: '#181818',
-        callToAction: '#fd4037'
+        callToAction: '#fd4037' // змінено на акцентний колір
       }
     }
   },

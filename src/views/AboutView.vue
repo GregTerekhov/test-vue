@@ -10,17 +10,24 @@ const router = useRouter()
 
 const movieId = ref('')
 const time = ref('')
-const showSuccessModal = ref(false)
+const showSuccessModal = ref<boolean>(false)
 const selectedMovie = ref<MoviesData | undefined>(undefined)
+const bookedSeats = ref<BookedSeats[]>([])
 
 const store = useMoviesStore()
 const { movies } = storeToRefs(store)
+
+const loadMovies = async () => {
+  await store.fetchMovies()
+
+  selectedMovie.value = movies.value.find((movie) => String(movie.id) === movieId.value)
+}
 
 onMounted(() => {
   movieId.value = router.currentRoute.value.query.id as string
   time.value = router.currentRoute.value.query.time as string
 
-  selectedMovie.value = movies.value.find((movie) => String(movie.id) === movieId.value)
+  loadMovies()
 })
 
 watch([movieId, time], () => {
@@ -29,6 +36,17 @@ watch([movieId, time], () => {
 })
 
 onMounted(() => {
+  getStoredSeats()
+  getStoredParams()
+})
+
+onBeforeUnmount(() => {
+  localStorage.removeItem('selectedMovieId')
+  localStorage.removeItem('selectedTime')
+  localStorage.removeItem('bookedSeats')
+})
+
+const getStoredParams = (): void => {
   const storedMovieId = localStorage.getItem('selectedMovieId')
   const storedTime = localStorage.getItem('selectedTime')
 
@@ -36,19 +54,21 @@ onMounted(() => {
     movieId.value = storedMovieId
     time.value = storedTime
 
-    selectedMovie.value = movies.value.find((movie) => String(movie.id) === storedMovieId)
+    loadMovies()
   }
-})
+}
 
-onBeforeUnmount(() => {
-  localStorage.removeItem('selectedMovieId')
-  localStorage.removeItem('selectedTime')
-})
+const getStoredSeats = (): void => {
+  const storedSeats = localStorage.getItem('bookedSeats')
 
-const bookedSeats = ref<BookedSeats[]>([])
+  if (storedSeats) {
+    const savedSeats = JSON.parse(storedSeats)
+    bookedSeats.value = [...savedSeats]
+  }
+}
 
-const toggleSeat = (row: number, place: number) => {
-  const existingSeatIndex = bookedSeats.value.findIndex(
+const toggleSeat = (row: number, place: number): void => {
+  const existingSeatIndex: number = bookedSeats.value.findIndex(
     (seat) => seat.row === row && seat.place === place
   )
 
@@ -57,24 +77,29 @@ const toggleSeat = (row: number, place: number) => {
   } else {
     bookedSeats.value.push({ row, place, price: 50 })
   }
+
+  localStorage.setItem('bookedSeats', JSON.stringify(bookedSeats.value))
 }
 
-const removeSeat = (index: number) => {
+const removeSeat = (index: number): void => {
   bookedSeats.value.splice(index, 1)
+  localStorage.setItem('bookedSeats', JSON.stringify(bookedSeats.value))
 }
 
-const purchaseTickets = () => {
-  store.bookedSeats = [...store.bookedSeats, ...bookedSeats.value]
+const purchaseTickets = (): void => {
+  store.bookedSeats.length = 0
+  store.bookedSeats = [...bookedSeats.value]
   showSuccessModal.value = true
 }
-const isSeatSelected = (row: number, place: number) => {
+const isSeatSelected = (row: number, place: number): boolean => {
   return bookedSeats.value.some((seat) => seat.row === row && seat.place === place)
 }
 const removeAllSeats = () => {
   bookedSeats.value = []
+  localStorage.setItem('bookedSeats', JSON.stringify(bookedSeats.value))
 }
 
-const totalSeatsPrice = () => {
+const totalSeatsPrice = (): number => {
   return bookedSeats.value.reduce((total, seat) => total + seat.price, 0)
 }
 </script>
@@ -138,8 +163,11 @@ const totalSeatsPrice = () => {
                 <td class="border border-backgroundBase text-center text-lg">{{ seat.place }}</td>
                 <td class="border border-backgroundBase text-center text-lg">{{ seat.price }}</td>
                 <td class="border border-backgroundBase text-center">
-                  <button @click="removeSeat(index)" class="h-8 w-8 rounded-full bg-backgroundBase">
-                    <v-icon name="io-close-outline" />
+                  <button
+                    @click="removeSeat(index)"
+                    class="h-8 w-8 rounded-full bg-backgroundBase text-textPrimary transition-colors duration-500 hover:bg-accent hover:text-accent"
+                  >
+                    <v-icon name="io-close-outline" animation="spin" hover speed="slow" />
                   </button>
                 </td>
               </tr>
@@ -147,8 +175,11 @@ const totalSeatsPrice = () => {
                 <td colspan="4">
                   <div class="flex w-full items-center justify-between px-6">
                     <p class="text-2xl text-accent">Видалити все</p>
-                    <button @click="removeAllSeats" class="h-8 w-8 rounded-full bg-backgroundBase">
-                      <v-icon name="io-close-outline" />
+                    <button
+                      @click="removeAllSeats"
+                      class="h-8 w-8 rounded-full bg-backgroundBase text-textPrimary transition-colors duration-500 hover:bg-accent hover:text-accent"
+                    >
+                      <v-icon name="io-close-outline" animation="spin" hover />
                     </button>
                   </div>
                 </td>
