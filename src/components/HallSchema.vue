@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { BookedSeats } from '@/stores/store'
 import { toRefs } from 'vue'
+
+import type { BookedSeats } from 'stores/store'
 
 const props = defineProps<{
   bookedSeats: BookedSeats[]

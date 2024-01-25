@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { BookedSeats } from '@/stores/store'
-import { toRefs } from 'vue'
+import { onBeforeUnmount, onMounted, toRefs } from 'vue'
+
+import type { BookedSeats } from 'stores/store'
 
 const props = defineProps<{
   time: String
@@ -10,11 +11,42 @@ const props = defineProps<{
 }>()
 
 const { bookedSeats } = toRefs(props)
+
+onMounted(() => {
+  blockScroll()
+  document.addEventListener('keydown', closeOnEscapeKey)
+})
+
+onBeforeUnmount(() => {
+  unblockScroll()
+  document.removeEventListener('keydown', closeOnEscapeKey)
+})
+
+const blockScroll = (): void => {
+  document.body.style.overflow = 'hidden'
+}
+
+const unblockScroll = (): void => {
+  document.body.style.overflow = ''
+}
+
+const closeOnBackdropClick = (event: MouseEvent): void => {
+  if (event.target === event.currentTarget) {
+    props.isClose()
+  }
+}
+
+const closeOnEscapeKey = (event: KeyboardEvent): void => {
+  if (event.key === 'Escape') {
+    props.isClose()
+  }
+}
 </script>
 
 <template>
   <div
     class="fixed left-0 top-0 z-10 flex h-full w-full items-center justify-center overflow-auto bg-textPrimary/[.4]"
+    @click="closeOnBackdropClick"
   >
     <div
       class="h-64 w-[500px] rounded-xl border border-solid border-accent bg-backgroundBase px-5 py-8"

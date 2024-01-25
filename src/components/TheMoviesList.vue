@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MoviesData } from '@/stores/store'
+import type { MoviesData } from 'stores/store'
 import MovieItem from './MovieItem.vue'
 
 defineProps<{ movies?: MoviesData[] }>()

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useMoviesStore, type BookedSeats } from '@/stores/store'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
-import type { MoviesData } from 'stores/store'
+import { useMoviesStore, type BookedSeats, type MoviesData } from '@/stores/store'
 import SessionInfo from 'components/SessionInfo.vue'
 import HallSchema from 'components/HallSchema.vue'
 import BookingTable from 'components/BookingTable.vue'
@@ -22,8 +21,6 @@ const store = useMoviesStore()
 const { movies } = storeToRefs(store)
 
 const loadMovies = async () => {
-  await store.fetchMovies()
-
   selectedMovie.value = movies.value.find((movie) => String(movie.id) === movieId.value)
 }
 
@@ -45,9 +42,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  localStorage.removeItem('selectedMovieId')
-  localStorage.removeItem('selectedTime')
-  localStorage.removeItem('bookedSeats')
+  localStorage.clear()
 })
 
 const getStoredParams = (): void => {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { type BookedSeats } from '@/stores/store'
 import { toRefs } from 'vue'
+
+import { type BookedSeats } from 'stores/store'
 
 const props = defineProps<{
   bookedSeats: BookedSeats[]
@@ -22,6 +23,11 @@ const removeAllSeats = (): void => {
 const totalSeatsPrice = (): number => {
   return bookedSeats.value.reduce((total, seat) => total + seat.price, 0)
 }
+
+const tableHeads = ['Ряд', 'Місце', 'Ціна', 'Дії']
+
+const commonTableHeadStyles = 'border bg-backgroundBase'
+const commonTableRowStyles = 'border border-backgroundBase text-center'
 </script>
 
 <template>
@@ -30,18 +36,21 @@ const totalSeatsPrice = (): number => {
     <table class="mb-6 w-96 border-spacing-1 border border-backgroundBase">
       <thead>
         <tr>
-          <th class="border bg-backgroundBase">Ряд</th>
-          <th class="border bg-backgroundBase">Місце</th>
-          <th class="border bg-backgroundBase">Ціна</th>
-          <th class="border bg-backgroundBase">Дії</th>
+          <th v-for="head in tableHeads" :key="head" :class="`${commonTableHeadStyles}`">
+            {{ head }}
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(seat, index) in bookedSeats" :key="index">
-          <td class="border border-backgroundBase text-center text-lg">{{ seat.row }}</td>
-          <td class="border border-backgroundBase text-center text-lg">{{ seat.place }}</td>
-          <td class="border border-backgroundBase text-center text-lg">{{ seat.price }}</td>
-          <td class="border border-backgroundBase text-center">
+          <td
+            v-for="key in Object.keys(seat)"
+            :key="key"
+            :class="`${commonTableRowStyles} text-lg`"
+          >
+            {{ seat[key as keyof BookedSeats] }}
+          </td>
+          <td :class="`${commonTableRowStyles}`">
             <button
               @click="removeSeat(index)"
               class="h-8 w-8 rounded-full bg-backgroundBase text-textPrimary transition-colors duration-500 hover:bg-accent hover:text-accent"

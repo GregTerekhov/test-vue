@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { onMounted } from 'vue'
+
+import { useMoviesStore } from 'stores/store'
 import HeaderNavigation from 'components/HeaderNavigation.vue'
+
+const store = useMoviesStore()
+
+onMounted(async () => {
+  await store.fetchMovies()
+})
 </script>
 
 <template>
