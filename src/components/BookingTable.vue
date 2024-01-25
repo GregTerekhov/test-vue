@@ -16,7 +16,7 @@ const removeSeat = (index: number): void => {
 }
 
 const removeAllSeats = (): void => {
-  bookedSeats.value = []
+  bookedSeats.value.splice(0, bookedSeats.value.length)
   localStorage.setItem('bookedSeats', JSON.stringify(bookedSeats.value))
 }
 
