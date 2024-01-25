@@ -3,7 +3,6 @@
   "include": [
     "src/**/*.js",
     "src/**/*.ts",
-    "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/**/*.json",
@@ -13,9 +12,9 @@
   "compilerOptions": {
     "composite": true,
     "allowJs": true,
-    "noEmit": true,
     "strict": true,
     "resolveJsonModule": true,
+    "emitDeclarationOnly": true,
     "declaration": true,
     "baseUrl": ".",
     "paths": {

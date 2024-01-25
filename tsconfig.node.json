@@ -6,13 +6,12 @@
     "cypress.config.*",
     "nightwatch.conf.*",
     "playwright.config.*",
-    ".eslintrc.*",
-    "src/env.d.ts"
+    ".eslintrc.*"
   ],
   "compilerOptions": {
     "composite": true,
-    "noEmit": true,
     "strict": true,
+    "emitDeclarationOnly": true,
     "declaration": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
