@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import type { MoviesData } from '@/stores/store'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-defineProps(['movie'])
+defineProps<{
+  movie: MoviesData
+}>()
 
 const navigateToMovieItem = (movieId: number, time: string): void => {
   router.push({ name: 'booking', query: { id: String(movieId), time } })
